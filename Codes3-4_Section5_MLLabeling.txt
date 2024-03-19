@@ -1,0 +1,41 @@
+Section 5 CODE 3
+library(tidyverse)
+
+# List all TSV files
+tsv_files <- list.files(pattern = "\\.tsv$")
+
+Section 5 CODE 4
+
+process_data_list <- lapply(tsv_files, function(file) {
+  # Process each TSV file
+  df <- read_tsv(file) %>%
+    rename(LabelName = `ObjectInfo - LabelName`) %>%
+    mutate(
+      GFAP = `Multiplex - GFAP_D` / `Multiplex - Cy5`,
+      CD31 = `Multiplex - CD31` / `Multiplex - TRITC`,
+      CD4 = `Multiplex - CD4 EPR6854` / `Multiplex - Cy5`,
+      CD8 = `Multiplex - CD8` / `Multiplex - TRITC`,
+      CD68 = `Multiplex - CD68 PG-M1` / `Multiplex - TRITC`,
+      CD11c = `Multiplex - CD11c` / `Multiplex - Cy5`,
+      CD163 = `Multiplex - CD163` / `Multiplex - Cy5`,
+      CD205 = `Multiplex - CD205_D` / `Multiplex - Cy5`,
+      TMEM119 = `Multiplex - TMEM119_C` / `Multiplex - Cy5`,
+      P2RY12 = `Multiplex - P2RY12` / `Multiplex - Cy5`,
+      FOXP3 = `Multiplex - FOXP3 236A/E6` / `Multiplex - TRITC`,
+      pSTAT3 = `Multiplex - p-STAT3_C` / `Multiplex - Cy5`,
+      PD1 = `Multiplex - PD-1 EPR4877(2)` / `Multiplex - TRITC`,
+      PDL1 = `Multiplex - PD-L1` / `Multiplex - Cy5`,
+      TIM3 = `Multiplex - TIM-3` / `Multiplex - TRITC`,
+      LAG3 = `Multiplex - LAG-3` / `Multiplex - Cy5`,
+      GRZMB = `Multiplex - GRZMB` / `Multiplex - TRITC`,
+      LCK = `Multiplex - LCK` / `Multiplex - Cy5`,
+      HLADR = `Multiplex - HLA-DR_B` / `Multiplex - TRITC`,
+    ) %>%
+    select(LabelName, GFAP, CD31, CD4, CD8, CD68, CD11c, CD163, CD205, TMEM119, P2RY12, FOXP3, pSTAT3, PD1, PDL1, TIM3, LAG3, GRZMB, LCK, HLADR) %>%
+    filter(LabelName == "Cell")
+  
+  processed_file_name <- sub("\\.tsv$", "_Processed.tsv", file)
+  
+  # Write the processed data to a new TSV file
+  write_tsv(df, processed_file_name)
+})
